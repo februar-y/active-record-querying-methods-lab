@@ -1,14 +1,15 @@
 class Show < ActiveRecord::Base
     def self.highest_rating
-        self.all.map{|show| show.rating}.max
+        #self.all.map{|show| show.rating}.max
+        self.maximum(:rating)
     end
 
     def self.most_popular_show
-        self.all.find_by(rating: self.highest_rating)
+        self.where("rating = ?", self.highest_rating).first
     end
 
     def self.lowest_rating
-        self.all.map{|show| show.rating}.min
+        self.minimum(:rating)
     end
 
     def self.least_popular_show
@@ -16,11 +17,11 @@ class Show < ActiveRecord::Base
     end
 
     def self.ratings_sum
-        self.all.sum{|show| show.rating}
+        self.sum(:rating)
     end
 
     def self.popular_shows
-        self.all.select{|show| show.rating > 5}
+        self.where("rating >= ?", 5)
     end
 
     def self.shows_by_alphabetical_order
